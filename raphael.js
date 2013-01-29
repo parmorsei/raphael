@@ -314,6 +314,7 @@
             "arrow-start": "none",
             blur: 0,
             "clip-rect": "0 0 1e9 1e9",
+            "clip-path": "none",
             cursor: "default",
             cx: 0,
             cy: 0,
@@ -4120,6 +4121,26 @@ window.Raphael.svg && function (R) {
                                 $(node, {"clip-path": E});
                                 delete o.clip;
                             }
+                        }
+                    break;
+                    case "clip-path":
+                        var rect = Str(value);
+                        if (rect.length >0) {
+                            o.clip && o.clip.parentNode.parentNode.removeChild(o.clip.parentNode);
+                            var el = $("clipPath"),
+                                rc = $("path");
+                            el.id = R.createUUID();
+                             $(rc, {
+                               'stroke':'#000',
+                               'stroke-width':'1',
+                               'fill':'#000',
+                                d: rect
+                            });
+
+                            el.appendChild(rc);
+                            o.paper.defs.appendChild(el);
+                            $(node, {"clip-path": "url(#" + el.id + ")"});
+                           // o.clip = rc;
                         }
                     break;
                     case "path":
